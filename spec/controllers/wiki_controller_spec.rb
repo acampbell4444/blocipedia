@@ -1,6 +1,16 @@
-require 'rails_helper'
+require 'spec_helper'
+
 
 RSpec.describe WikiController, type: :controller do
+
+
+  let(:my_wiki) { create(:wiki, user: user) }
+
+  describe "anonymous user" do
+   before :each do
+     # This simulates an anonymous user
+     login_with create(:user)
+   end
 
   describe "GET #new" do
     it "returns http success" do
@@ -37,4 +47,5 @@ RSpec.describe WikiController, type: :controller do
     end
   end
 
+end
 end
