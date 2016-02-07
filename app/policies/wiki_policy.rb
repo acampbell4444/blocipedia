@@ -28,7 +28,7 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def update?
-     crud_authorization
+    crud_authorization
   end
 
   def edit?
@@ -44,10 +44,6 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def crud_authorization
-    user.admin? || user.premium? || (user.standard? && (!wiki.private))
+    user.admin? || user.premium? || (user.standard? && !wiki.private)
   end
-
-
-
-
 end

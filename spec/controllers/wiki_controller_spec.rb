@@ -1,51 +1,47 @@
-require 'spec_helper'
+require 'rails_helper'
 
-
-RSpec.describe WikiController, type: :controller do
-
-
+RSpec.describe WikisController, type: :controller do
   let(:my_wiki) { create(:wiki, user: user) }
 
-  describe "anonymous user" do
-   before :each do
-     # This simulates an anonymous user
-     login_with create(:user)
-   end
+  describe 'anonymous user' do
+    before :each do
+      # This simulates an anonymous user
+      login_with create!(:user)
+    end
 
-  describe "GET #new" do
-    it "returns http success" do
-      get :new
-      expect(response).to have_http_status(:success)
+    describe 'GET #new' do
+      it 'returns http success' do
+        get :new
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe 'GET #index' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe 'GET #show' do
+      it 'returns http success' do
+        get :show
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe 'GET #delete' do
+      it 'returns http success' do
+        get :delete
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe 'GET #edit' do
+      it 'returns http success' do
+        get :edit
+        expect(response).to have_http_status(:success)
+      end
     end
   end
-
-  describe "GET #index" do
-    it "returns http success" do
-      get :index
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET #show" do
-    it "returns http success" do
-      get :show
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET #delete" do
-    it "returns http success" do
-      get :delete
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe "GET #edit" do
-    it "returns http success" do
-      get :edit
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-end
 end

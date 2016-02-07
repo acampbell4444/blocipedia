@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :roles
   has_many :wikis
+
   before_create :set_default_role
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -24,19 +25,20 @@ class User < ActiveRecord::Base
   end
 
   def standard!
-    self.update(role: "standard")
+    update(role: 'standard')
   end
 
   def premium!
-    self.update(role: "premium")
+    update(role: 'premium')
   end
 
   def admin!
-    self.update(role: "admin")
+    update(role: 'admin')
   end
 
   private
-    def set_default_role
-      self.role ||= 'standard'
-    end
+
+  def set_default_role
+    self.role ||= 'standard'
+  end
 end
