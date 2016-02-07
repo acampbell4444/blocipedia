@@ -10,6 +10,7 @@ source 'https://rubygems.org'
 
  group :development do
    gem 'sqlite3'
+   gem 'rubocop', require: false
  end
 
  group :development, :test do
