@@ -8,16 +8,9 @@ group :production do
   gem 'rails_12factor'
 end
 
-<<<<<<< HEAD
- group :development do
-   gem 'sqlite3'
-   gem 'rubocop', require: false
- end
-=======
 group :development do
   gem 'sqlite3'
 end
->>>>>>> rspec_updates
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'

@@ -11,7 +11,7 @@
 
     <small>
       <p style="color:gray">
-        This Wiki was Submitted <%= time_ago_in_words(@wiki.created_at) %> ago by   <%= @wiki.user.name %>
+        This Wiki was Submitted <%= time_ago_in_words(@wiki.created_at) %> ago by   <%= @wiki.user.name || @wiki.user.email %>
       </p>
 
       <p style="color:orange">

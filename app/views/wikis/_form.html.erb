@@ -31,13 +31,15 @@
       <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: "Enter Wiki body" %>
     <% end %>
 
-    <div class="form-group">
-    <div style="padding-left:20px">
-      <%=f.label :private, class: 'checkbox' do %>
-        <%= f.check_box :private %> Private Wiki
+    <% if current_user.admin_premium? %>
+      <div class="form-group">
+      <div style="padding-left:20px">
+        <%=f.label :private, class: 'checkbox' do %>
+          <%= f.check_box :private %> Private Wiki
+      <% end %>
+      </div>
+      </div>
     <% end %>
-    </div>
-    </div>
 
     <div class="form-group">
       <%= f.submit "Save", class: 'btn btn-success' %>

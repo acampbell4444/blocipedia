@@ -1,10 +1,12 @@
+
+
 user = User.new(
-    email: "example@example.com",
-    password: "password",
-    password_confirmation: "password",
-    )
-    user.skip_confirmation!
-    user.save!
+  email: 'example@example.com',
+  password: 'password',
+  password_confirmation: 'password'
+)
+user.skip_confirmation!
+user.save!
 
 puts "#{User.count} user(s) created"
 # This file should contain all the record creation needed to seed the database with its default values.
