@@ -8,16 +8,10 @@ group :production do
   gem 'rails_12factor'
 end
 
-<<<<<<< HEAD
- group :development do
-   gem 'sqlite3'
-   gem 'rubocop', require: false
- end
-=======
 group :development do
   gem 'sqlite3'
+  gem 'rubocop', require: false
 end
->>>>>>> rspec_updates
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
@@ -41,5 +35,3 @@ gem 'bootstrap-sass'
 gem 'sendgrid'
 
 gem 'pundit'
-
-gem 'rubocop', '~> 0.36.0', require: false
