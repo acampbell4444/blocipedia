@@ -1,0 +1,47 @@
+
+<div>
+<%= form_for [wiki] do |f| %>
+  <% if wiki.errors.any? %>
+  <div class="alert alert-danger">
+    <h4><%= pluralize(wiki.errors.count, "error") %></h4>
+      <% wiki.errors.full_messages.each do |msg| %>
+        <p><%= msg %><p>
+      <% end %>
+  </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-4">
+      <p>Guidelines for Wikis:</p>
+      <ul>
+        <li>No Naughty Words.</li><br>
+        <li>Title Must be 40 Characters or Less</li><br>
+        <li>Body Must be 250 Characters or Less</li>
+      </ul>
+    </div>
+
+    <div class="col-md-8">
+    <%= form_group_tag(wiki.errors[:title]) do %>
+      <%= f.label :title %>
+      <%= f.text_field :title, class: 'form-control', placeholder: "Enter Wiki title" %>
+    <% end %>
+
+    <%= form_group_tag(wiki.errors[:body]) do %>
+      <%= f.label :body %>
+      <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: "Enter Wiki body" %>
+    <% end %>
+
+    <div class="form-group">
+    <div style="padding-left:20px">
+      <%=f.label :private, class: 'checkbox' do %>
+        <%= f.check_box :private %> Private Wiki
+    <% end %>
+    </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.submit "Save", class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+</div>

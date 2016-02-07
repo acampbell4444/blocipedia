@@ -1,0 +1,30 @@
+<p style="text-align:right;float:right;">
+  <strong><%= link_to "Back to Wiki List", wikis_path %><strong>
+</p><br><br>
+
+<div class="media">
+  <div class="media-body">
+    <h3 class="media-heading">
+      <strong><%= @wiki.title %></strong><br><br>
+    </h3>
+    <%= @wiki.body %><br><br>
+
+    <small>
+      <p style="color:gray">
+        This Wiki was Submitted <%= time_ago_in_words(@wiki.created_at) %> ago by   <%= @wiki.user.name %>
+      </p>
+
+      <p style="color:orange">
+      <% if @wiki.private %>
+        Private Wiki
+      <% else %>
+        Public Wiki
+      <% end %>
+      </p>
+    </small><br>
+  </div>
+</div>
+<br><br>
+
+<%= link_to "Edit Wiki", edit_wiki_path(@wiki), class: 'btn btn-success' %>
+<%= link_to "Delete Wiki", [@wiki], method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this Wiki?' } %></br>
