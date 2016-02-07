@@ -1,27 +1,31 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!
 
-def index
-    @wikis = Wiki.all
+  def index
+    @wikis = policy_scope(Wiki)
   end
 
   def show
      @wiki = Wiki.find(params[:id])
+     authorize @wiki
   end
 
   def new
     @user = current_user
     @wiki = Wiki.new
+    authorize @wiki
   end
 
   def edit
     @wiki = Wiki.find(params[:id])
+    authorize @wiki
   end
 
   def create
     @user = current_user
     @wiki = Wiki.new(wiki_params)
     @wiki.user = current_user
+    authorize @wiki
 
     if @wiki.save
       flash[:notice] = "Wiki was saved."
@@ -36,6 +40,7 @@ def index
     @wiki = Wiki.find(params[:id])
     @wiki.assign_attributes(wiki_params)
     @wiki.user = current_user
+    authorize @wiki
 
     if @wiki.save
       flash[:notice] = "Wiki was saved."

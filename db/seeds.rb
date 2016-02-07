@@ -1,3 +1,5 @@
+
+
 user = User.new(
     email: "example@example.com",
     password: "password",
