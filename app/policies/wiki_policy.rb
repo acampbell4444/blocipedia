@@ -10,13 +10,14 @@ class WikiPolicy < ApplicationPolicy
     end
 
     def resolve
-      if user.admin_premium?
+      if user.standard?
+        scope.where(private:false)
+      elsif user.admin_premium?
         scope.all
-      else
-        scope.where(private: false)
       end
     end
   end
+
 
   def initialize(user, wiki)
     @user = user
@@ -48,6 +49,12 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def crud_authorization
-    user.admin? || user.premium? || (user.standard? && !wiki.private)
+    if wiki.private
+      (user.premium? && (user == wiki.user)) || user.admin?
+    else
+      user.admin_premium? || user.standard?
+    end
   end
+
+
 end

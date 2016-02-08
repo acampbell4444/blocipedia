@@ -1,6 +1,6 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!
-  after_filter :verify_policy_scoped, :only => :index
+  after_action :verify_policy_scoped, only: :index
 
   def index
     @wikis = policy_scope(Wiki)

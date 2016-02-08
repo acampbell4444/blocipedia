@@ -1,0 +1,13 @@
+<% if current_user.admin_premium? %>
+  <h1>My Private Wikis</h1>
+  <%= link_to "Create a New Wiki", new_wiki_path, class: 'btn btn-success' %><br><br>
+
+  <% @wikis.each do |wiki| %>
+    <% if wiki.private %>
+      <% if wiki.user_id == current_user.id %>
+        <p><%= link_to wiki.title, wiki %></p>
+      <% end %>
+    <% end %>
+  <% end %>
+
+<% end %>
