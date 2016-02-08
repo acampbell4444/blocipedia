@@ -15,6 +15,7 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
+  gem 'rubocop', require: false
 end
 
 # Use SCSS for stylesheets
@@ -35,3 +36,5 @@ gem 'bootstrap-sass'
 gem 'sendgrid'
 
 gem 'pundit'
+
+gem 'factory_girl_rails', '~> 4.0'

@@ -1,4 +1,4 @@
-
+require "random_data"
 
 user = User.new(
   email: 'example@example.com',
