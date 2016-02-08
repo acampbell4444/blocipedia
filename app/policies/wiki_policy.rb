@@ -43,6 +43,10 @@ class WikiPolicy < ApplicationPolicy
     crud_authorization
   end
 
+  def index?
+    crud_authorization
+  end
+
   def crud_authorization
     user.admin? || user.premium? || (user.standard? && !wiki.private)
   end
