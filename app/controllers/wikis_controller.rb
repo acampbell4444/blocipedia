@@ -3,7 +3,11 @@ class WikisController < ApplicationController
   after_action :verify_policy_scoped, only: :index
 
   def index
-    @wikis = policy_scope(Wiki)
+    @wikis = policy_scope(Wiki).where(private: false)
+  end
+
+  def private
+    @wikis = policy_scope(Wiki).where(private: true)
   end
 
   def show

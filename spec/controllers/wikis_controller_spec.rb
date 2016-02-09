@@ -2,15 +2,14 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
   let(:my_user) { create(:user) }
-  let(:my_user2) {create(:user, email: 'bob@example.com')}
-  let(:my_user_premium) {create(:user, email: 'premium@example.com', role: 'premium')}
-  let(:my_user_admin) {create(:user, email: 'admin@example.com', role: 'admin')}
+  let(:my_user2) { create(:user, email: 'bob@example.com') }
+  let(:my_user_premium) { create(:user, email: 'premium@example.com', role: 'premium') }
+  let(:my_user_admin) { create(:user, email: 'admin@example.com', role: 'admin') }
   let(:my_wiki1) { create(:wiki, user: my_user) }
   let(:my_wiki2) { create(:wiki, user: my_user) }
   let(:my_wiki3) { create(:wiki, user: my_user2) }
   let(:premium_wiki) { create(:wiki, user: my_user_premium) }
   let(:admin_wiki) { create(:wiki, user: my_user_admin) }
-
 
   context 'unauthorized user' do
     describe 'GET #show' do
@@ -82,7 +81,7 @@ RSpec.describe WikisController, type: :controller do
 
     it 'users should have default role of standard' do
       expect(my_user.role).to eq('standard')
-  end
+    end
 
     describe 'GET #show' do
       it 'returns http success' do
@@ -432,7 +431,7 @@ RSpec.describe WikisController, type: :controller do
         delete :destroy, id: my_wiki1.id
         count = Wiki.where(id: my_wiki1.id).size
         expect(count).to eq 0
-        end
+      end
 
       it "redirects to wikis index" do
         delete :destroy, id: my_wiki1.id
@@ -446,7 +445,4 @@ RSpec.describe WikisController, type: :controller do
       end
     end
   end
-
-
-
 end

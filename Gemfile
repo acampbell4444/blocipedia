@@ -15,7 +15,6 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
-  gem 'rubocop', require: false
   gem 'shoulda'
 end
 
@@ -39,3 +38,5 @@ gem 'sendgrid'
 gem 'pundit'
 
 gem 'factory_girl_rails', '~> 4.0'
+
+gem "faker", "~> 1.6.1"

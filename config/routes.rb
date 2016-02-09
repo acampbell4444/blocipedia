@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/wikis/private' => 'wikis#private'
   resources :wikis
 
   devise_for :users

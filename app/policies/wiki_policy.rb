@@ -43,7 +43,7 @@ class WikiPolicy < ApplicationPolicy
     crud_authorization
   end
 
-  def crud_authorization#except destroy
+  def crud_authorization # except destroy
     if wiki.private
       (user.premium? && (user == wiki.user)) || user.admin?
     else
