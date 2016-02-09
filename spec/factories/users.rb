@@ -6,6 +6,6 @@ FactoryGirl.define do
     name 'example'
     password 'password'
     email 'example@example.com'
-    confirmed_at Date.today
+    confirmed_at Time.zone.today
   end
 end

@@ -11,13 +11,12 @@ class WikiPolicy < ApplicationPolicy
 
     def resolve
       if user.standard?
-        scope.where(private:false)
+        scope.where(private: false)
       elsif user.admin_premium?
         scope.all
       end
     end
   end
-
 
   def initialize(user, wiki)
     @user = user
@@ -55,6 +54,4 @@ class WikiPolicy < ApplicationPolicy
       user.admin_premium? || user.standard?
     end
   end
-
-
 end
