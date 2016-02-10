@@ -1,7 +1,4 @@
-<p style="text-align:right;float:right;">
-  <strong><%= link_to "Back to Wiki List", wikis_path %><strong>
-</p><br><br>
-
+<br><br>
 <div class="media">
   <div class="media-body">
     <h3 class="media-heading">
@@ -26,7 +23,9 @@
 </div>
 <br><br>
 
+<% if current_user != nil  %>
 <%= link_to "Edit Wiki", edit_wiki_path(@wiki), class: 'btn btn-success' %>
-<% if @wiki.user == current_user || current_user.admin? %>
-<%= link_to "Delete Wiki", [@wiki], method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this Wiki?' } %></br>
+  <% if current_user.admin? || ((current_user.standard? || current_user.premium?) && @wiki.user == current_user) %>
+  <%= link_to "Delete Wiki", [@wiki], method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this Wiki?' } %></br>
+  <% end %>
 <% end %>

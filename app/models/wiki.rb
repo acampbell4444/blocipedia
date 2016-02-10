@@ -6,4 +6,5 @@ class Wiki < ActiveRecord::Base
   validates :user, presence: true
 
   default_scope { order('title ASC') }
+
 end

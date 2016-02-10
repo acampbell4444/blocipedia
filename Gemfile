@@ -40,3 +40,7 @@ gem 'pundit'
 gem 'factory_girl_rails', '~> 4.0'
 
 gem "faker", "~> 1.6.1"
+
+gem 'stripe'
+
+gem 'figaro', '1.0'

@@ -13,26 +13,26 @@ RSpec.describe WikisController, type: :controller do
 
   context 'unauthorized user' do
     describe 'GET #show' do
-      it 'returns http redirect' do
+      it 'returns http success' do
         get :show, id: my_wiki1.id
-        expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:success)
       end
 
-      it "can't display wiki to unauthorized user" do
+      it "can display wiki to unauthorized user" do
         get :show, id: my_wiki1.id
-        expect(assigns(:wiki)).to eq(nil)
+        expect(assigns(:wiki)).to eq(my_wiki1)
       end
     end
 
     describe "GET #index" do
       it 'returns http redirect' do
         get :index
-        expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:success)
       end
 
-      it "can't display wikis to unauthorized user" do
+      it "can display wikis to unauthorized user" do
         get :index
-        expect(assigns(:wikis)).to eq(nil)
+        expect(assigns(:wikis)).to eq([my_wiki1, my_wiki2])
       end
     end
 

@@ -1,5 +1,5 @@
 class WikisController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:index, :show]
   after_action :verify_policy_scoped, only: :index
 
   def index

@@ -10,7 +10,7 @@ class WikiPolicy < ApplicationPolicy
     end
 
     def resolve
-      if user.standard?
+      if user.nil? || user.standard?
         scope.where(private: false)
       elsif user.admin_premium?
         scope.all
@@ -36,11 +36,11 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def show?
-    crud_authorization
+    crud_authorization || user.nil?
   end
 
   def index?
-    crud_authorization
+    crud_authorization || user.nil?
   end
 
   def crud_authorization # except destroy

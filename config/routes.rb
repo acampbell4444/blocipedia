@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get '/wikis/private' => 'wikis#private'
   resources :wikis
+  resources :charges, only: [:new, :create]
 
   devise_for :users
   get 'welcome/index'
