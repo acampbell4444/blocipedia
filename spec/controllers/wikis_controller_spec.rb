@@ -2,8 +2,15 @@ require 'rails_helper'
 
 RSpec.describe WikisController, type: :controller do
   let(:my_user) { create(:user) }
+  let(:my_user2) {create(:user, email: 'bob@example.com')}
+  let(:my_user_premium) {create(:user, email: 'premium@example.com', role: 'premium')}
+  let(:my_user_admin) {create(:user, email: 'admin@example.com', role: 'admin')}
   let(:my_wiki1) { create(:wiki, user: my_user) }
   let(:my_wiki2) { create(:wiki, user: my_user) }
+  let(:my_wiki3) { create(:wiki, user: my_user2) }
+  let(:premium_wiki) { create(:wiki, user: my_user_premium) }
+  let(:admin_wiki) { create(:wiki, user: my_user_admin) }
+
 
   context 'unauthorized user' do
     describe 'GET #show' do
@@ -68,10 +75,14 @@ RSpec.describe WikisController, type: :controller do
     end
   end
 
-  context 'authorized user' do
+  context 'standard user' do
     before(:each) do
       sign_in my_user
     end
+
+    it 'users should have default role of standard' do
+      expect(my_user.role).to eq('standard')
+  end
 
     describe 'GET #show' do
       it 'returns http success' do
@@ -85,7 +96,7 @@ RSpec.describe WikisController, type: :controller do
         end
       end
 
-      it "can display wiki to authorized user" do
+      it "can display wiki to standard user" do
         get :show, id: my_wiki1.id
         expect(assigns(:wiki)).to eq(my_wiki1)
       end
@@ -97,7 +108,7 @@ RSpec.describe WikisController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it "displays wikis to authorized user" do
+      it "displays wikis to standard user" do
         get :index
         expect(assigns(:wikis)).to eq([my_wiki1, my_wiki2])
       end
@@ -127,6 +138,11 @@ RSpec.describe WikisController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
+      it "returns http success when trying to edit other user's wiki" do
+        get :edit, id: my_wiki3.id
+        expect(response).to have_http_status(:success)
+      end
+
       it 'raises RecordNotFound when not found' do
         assert_raises(ActiveRecord::RecordNotFound) do
           get :edit, id: 1234
@@ -135,7 +151,7 @@ RSpec.describe WikisController, type: :controller do
     end
 
     describe "PUT update" do
-      it "updates wiki with expected attributes" do
+      it "updates users own wiki with expected attributes" do
         new_title = RandomData.random_sentence
         new_body = RandomData.random_paragraph
 
@@ -146,13 +162,31 @@ RSpec.describe WikisController, type: :controller do
         expect(updated_wiki.title).to eq new_title
         expect(updated_wiki.body).to eq new_body
       end
+
+      it "updates other users wikis with expected attributes" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+
+        put :update, id: my_wiki3.id, wiki: { title: new_title, body: new_body }
+
+        updated_wiki = assigns(:wiki)
+        expect(updated_wiki.id).to eq my_wiki3.id
+        expect(updated_wiki.title).to eq new_title
+        expect(updated_wiki.body).to eq new_body
+      end
     end
 
     describe "DELETE destroy" do
-      it "deletes the wiki" do
+      it "deletes users own wiki" do
         delete :destroy, id: my_wiki1.id
         count = Wiki.where(id: my_wiki1.id).size
         expect(count).to eq 0
+      end
+
+      it "wont delete other users wikis" do
+        assert_raises(Pundit::NotAuthorizedError) do
+          delete :destroy, id: my_wiki3.id
+        end
       end
 
       it "redirects to wikis index" do
@@ -168,43 +202,251 @@ RSpec.describe WikisController, type: :controller do
     end
   end
 
-  context 'standard user' do
+  context 'premium user' do
     before(:each) do
-      sign_in my_user
+      sign_in my_user_premium
     end
+
     describe 'GET #show' do
       it 'returns http success' do
         get :show, id: my_wiki1.id
-        expect(response).to be_success
+        expect(response).to have_http_status(:success)
       end
 
-      it 'renders the #show view' do
-        get :show, id: my_wiki1.id
-        expect(response).to render_template :show
+      it 'raises RecordNotFound when not found' do
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :show, id: 1234
+        end
       end
 
-      it 'assigns my_wiki1 to @wiki' do
+      it "can display wiki to premium user" do
         get :show, id: my_wiki1.id
         expect(assigns(:wiki)).to eq(my_wiki1)
       end
     end
 
-    describe 'GET #index' do
-      it 'responds successfully with an HTTP 200 status code' do
+    describe "GET #index" do
+      it 'returns http success' do
         get :index
-        expect(response).to be_success
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:success)
       end
 
-      it 'renders the index template' do
+      it "displays wikis to premium users" do
         get :index
-        expect(response).to render_template('index')
+        expect(assigns(:wikis)).to eq([my_wiki1, my_wiki2, premium_wiki])
+      end
+    end
+
+    describe "GET #new" do
+      it "returns http success" do
+        get :new
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe "POST create" do
+      it "increases the number of wikis by 1" do
+        expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph } }.to change(Wiki, :count).by(1)
       end
 
-      it 'loads all of the wikis into @wikis' do
-        get :index
-        expect(assigns(:wikis)).to match_array([my_wiki1, my_wiki2])
+      it "redirects to the new wiki" do
+        post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph }
+        expect(response).to redirect_to Wiki.last
+      end
+    end
+
+    describe "GET #edit" do
+      it "returns http success" do
+        get :edit, id: premium_wiki.id
+        expect(response).to have_http_status(:success)
+      end
+
+      it "returns http success when trying to edit other user's wiki" do
+        get :edit, id: my_wiki3.id
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'raises RecordNotFound when not found when tring to edit non-existent wiki' do
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :edit, id: 1234
+        end
+      end
+    end
+
+    describe "PUT update" do
+      it "updates users own wiki with expected attributes" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+
+        put :update, id: premium_wiki.id, wiki: { title: new_title, body: new_body }
+
+        updated_wiki = assigns(:wiki)
+        expect(updated_wiki.id).to eq premium_wiki.id
+        expect(updated_wiki.title).to eq new_title
+        expect(updated_wiki.body).to eq new_body
+      end
+
+      it "updates other users wikis with expected attributes" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+
+        put :update, id: my_wiki3.id, wiki: { title: new_title, body: new_body }
+
+        updated_wiki = assigns(:wiki)
+        expect(updated_wiki.id).to eq my_wiki3.id
+        expect(updated_wiki.title).to eq new_title
+        expect(updated_wiki.body).to eq new_body
+      end
+    end
+
+    describe "DELETE destroy" do
+      it "deletes users own wiki" do
+        delete :destroy, id: premium_wiki.id
+        count = Wiki.where(id: premium_wiki.id).size
+        expect(count).to eq 0
+      end
+
+      it "wont delete other users wikis" do
+        assert_raises(Pundit::NotAuthorizedError) do
+          delete :destroy, id: my_wiki3.id
+        end
+      end
+
+      it "redirects to wikis index" do
+        delete :destroy, id: premium_wiki.id
+        expect(response).to redirect_to wikis_path
+      end
+
+      it 'raises RecordNotFound when not found' do
+        assert_raises(ActiveRecord::RecordNotFound) do
+          delete :destroy, id: 1234
+        end
       end
     end
   end
+
+  context 'admin user' do
+    before(:each) do
+      sign_in my_user_admin
+    end
+    describe 'GET #show' do
+      it 'returns http success' do
+        get :show, id: my_wiki1.id
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'raises RecordNotFound when not found' do
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :show, id: 1234
+        end
+      end
+
+      it "can display wiki to an admin user" do
+        get :show, id: my_wiki1.id
+        expect(assigns(:wiki)).to eq(my_wiki1)
+      end
+    end
+
+    describe "GET #index" do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it "displays wikis to admin users" do
+        get :index
+        expect(assigns(:wikis)).to eq([my_wiki1, my_wiki2, admin_wiki])
+      end
+    end
+
+    describe "GET #new" do
+      it "returns http success" do
+        get :new
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe "POST create" do
+      it "increases the number of wikis by 1" do
+        expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph } }.to change(Wiki, :count).by(1)
+      end
+
+      it "redirects to the new wiki" do
+        post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph }
+        expect(response).to redirect_to Wiki.last
+      end
+    end
+
+    describe "GET #edit" do
+      it "returns http success" do
+        get :edit, id: admin_wiki.id
+        expect(response).to have_http_status(:success)
+      end
+
+      it "returns http success when trying to edit other user's wiki" do
+        get :edit, id: my_wiki3.id
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'raises RecordNotFound when not found when tring to edit non-existent wiki' do
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :edit, id: 1234
+        end
+      end
+    end
+
+    describe "PUT update" do
+      it "updates users own wiki with expected attributes" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+
+        put :update, id: admin_wiki.id, wiki: { title: new_title, body: new_body }
+
+        updated_wiki = assigns(:wiki)
+        expect(updated_wiki.id).to eq admin_wiki.id
+        expect(updated_wiki.title).to eq new_title
+        expect(updated_wiki.body).to eq new_body
+      end
+
+      it "updates other users wikis with expected attributes" do
+        new_title = RandomData.random_sentence
+        new_body = RandomData.random_paragraph
+
+        put :update, id: my_wiki3.id, wiki: { title: new_title, body: new_body }
+
+        updated_wiki = assigns(:wiki)
+        expect(updated_wiki.id).to eq my_wiki3.id
+        expect(updated_wiki.title).to eq new_title
+        expect(updated_wiki.body).to eq new_body
+      end
+    end
+
+    describe "DELETE destroy" do
+      it "deletes users own wiki" do
+        delete :destroy, id: admin_wiki.id
+        count = Wiki.where(id: admin_wiki.id).size
+        expect(count).to eq 0
+      end
+
+      it "deletes other users wikis" do
+        delete :destroy, id: my_wiki1.id
+        count = Wiki.where(id: my_wiki1.id).size
+        expect(count).to eq 0
+        end
+
+      it "redirects to wikis index" do
+        delete :destroy, id: my_wiki1.id
+        expect(response).to redirect_to wikis_path
+      end
+
+      it 'raises RecordNotFound when not found' do
+        assert_raises(ActiveRecord::RecordNotFound) do
+          delete :destroy, id: 1234
+        end
+      end
+    end
+  end
+
+
+
 end

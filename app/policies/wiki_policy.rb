@@ -27,16 +27,12 @@ class WikiPolicy < ApplicationPolicy
     crud_authorization
   end
 
-  def update?
-    crud_authorization
-  end
-
   def edit?
-    crud_authorization
+    user.present?
   end
 
   def destroy?
-    crud_authorization
+    destroy_authorization
   end
 
   def show?
@@ -47,11 +43,15 @@ class WikiPolicy < ApplicationPolicy
     crud_authorization
   end
 
-  def crud_authorization
+  def crud_authorization#except destroy
     if wiki.private
       (user.premium? && (user == wiki.user)) || user.admin?
     else
-      user.admin_premium? || user.standard?
+      user.present?
     end
+  end
+
+  def destroy_authorization
+    user == wiki.user || user.admin?
   end
 end
