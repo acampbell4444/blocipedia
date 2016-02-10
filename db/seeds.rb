@@ -1,18 +1,63 @@
-require "random_data"
+require "faker"
 
-user = User.new(
-  email: 'example@example.com',
+
+  5.times do
+  user = User.new(
+    email: Faker::Internet.email,
+    name:  Faker::Name.name,
+    password: 'password',
+    password_confirmation: 'password',
+    role: 'standard'
+  )
+  user.skip_confirmation!
+  user.save!
+  end
+  users = User.all
+
+  50.times do
+  wiki = Wiki.create!(
+    user: users.sample,
+    title: Faker::Hipster.sentence,
+    body: Faker::Hipster.paragraph,
+    private: false
+  )
+  end
+
+  50.times do
+  wiki = Wiki.create!(
+    user: users.sample,
+    title: Faker::Hipster.sentence,
+    body: Faker::Hipster.paragraph,
+    private: true
+  )
+  end
+  wikis = Wiki.all
+
+  user = User.first
+  user.skip_reconfirmation!
+  user.update_attributes!(
+  name: 'admin',
+  email: 'admin@example.com',
   password: 'password',
-  password_confirmation: 'password'
+  role: 'admin'
 )
-user.skip_confirmation!
-user.save!
 
-puts "#{User.count} user(s) created"
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+  user = User.second
+  user.skip_reconfirmation!
+  user.update_attributes!(
+  name: 'premium',
+  email: 'premium@example.com',
+  password: 'password',
+  role: 'premium'
+)
+
+user = User.third
+user.skip_reconfirmation!
+user.update_attributes!(
+  name: 'standard',
+  email: 'standard@example.com',
+  password: 'password',
+  role: 'standard'
+)
+ puts "#{User.count} users created"
+ puts "#{Wiki.count} wikis created"
