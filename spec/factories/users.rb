@@ -3,9 +3,9 @@ include RandomData
 
 FactoryGirl.define do
   factory :user do
-    name 'example'
-    password 'password'
-    email 'example@example.com'
+    name (RandomData.random_word)
+    password RandomData.random_word + RandomData.random_word + RandomData.random_word
+    email RandomData.random_email
     confirmed_at Time.zone.today
   end
 end
