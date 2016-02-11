@@ -15,7 +15,7 @@
       <p>Guidelines for Wikis:</p>
       <ul>
         <li>No Naughty Words.</li><br>
-        <li>Title Must be 100 Characters or Less</li><br>
+        <li>Title Must be 150 Characters or Less</li><br>
         <li>Body Must be 500 Characters or Less</li>
       </ul>
     </div>
@@ -31,14 +31,14 @@
       <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: "Enter Wiki body" %>
     <% end %>
 
-    <% if current_user.admin_premium? %>
+    <% if ((current_user.premium? && @wiki.user == current_user) || current_user.admin?)  %>
       <div class="form-group">
       <div style="padding-left:20px">
         <%=f.label :private, class: 'checkbox' do %>
-          <%= f.check_box :private %> Private Wiki
-      <% end %>
+        <%= f.check_box :private %> Private Wiki
       </div>
       </div>
+    <% end %>
     <% end %>
 
     <div class="form-group">

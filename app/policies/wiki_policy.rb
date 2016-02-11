@@ -23,12 +23,20 @@ class WikiPolicy < ApplicationPolicy
     @wiki = wiki
   end
 
+  def new?
+    create_authorization
+  end
+
   def create?
-    crud_authorization
+    create_authorization
   end
 
   def edit?
-    user.present?
+    edit_update_authorization
+  end
+
+  def update?
+    edit_update_authorization
   end
 
   def destroy?
@@ -36,18 +44,47 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def show?
-    crud_authorization || user.nil?
+    show_authorization
+  end
+
+  def private_index?
+    user.admin_premium?
   end
 
   def index?
-    crud_authorization || user.nil?
+    user.nil? || user
   end
 
-  def crud_authorization # except destroy
-    if wiki.private
-      (user.premium? && (user == wiki.user)) || user.admin?
+  def create_authorization
+    user.present?
+  end
+
+  def show_authorization
+    if !(wiki.private)
+      true
     else
-      user.present?
+      if !(user.present?) || user.standard?
+        false
+      elsif ((user.premium? && (user == wiki.user)) || user.admin?)
+        true
+      end
+    end
+  end
+
+  def edit_update_authorization
+    if !(wiki.private)
+      if user.present?
+        true
+      else
+        false
+      end
+    else
+      if !(user.present?) || user.standard?
+        false
+      elsif
+        ((user.premium? && (user == wiki.user)) || user.admin?)
+        true
+      end
     end
   end
 
