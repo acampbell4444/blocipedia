@@ -12,5 +12,6 @@ class ApplicationController < ActionController::Base
     # Add my attributes added to the devise User class
     devise_parameter_sanitizer.for(:sign_up) << :name << :access
     devise_parameter_sanitizer.for(:account_update) << :name << :access
+    devise_parameter_sanitizer.for(:account_update) << :role << :access
   end
 end
