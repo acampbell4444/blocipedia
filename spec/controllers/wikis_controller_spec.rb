@@ -69,7 +69,6 @@ RSpec.describe WikisController, type: :controller do
     end
 
     describe "POST create" do
-
       it "does not allow unauthorized users to create posts" do
         expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph } }.to change(Wiki, :count).by(0)
       end
@@ -201,7 +200,7 @@ RSpec.describe WikisController, type: :controller do
 
       it "raises and error when standard tries to create wiki as private" do
         assert_raises(ActionController::UnpermittedParameters) do
-          post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: true, user: my_user}
+          post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: true, user: my_user }
         end
       end
     end
@@ -381,7 +380,7 @@ RSpec.describe WikisController, type: :controller do
       end
 
       it "increases the number of private wikis by 1" do
-        expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: true} }.to change(Wiki, :count).by(1)
+        expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: true } }.to change(Wiki, :count).by(1)
       end
 
       it "redirects to the new private wiki" do
@@ -609,7 +608,7 @@ RSpec.describe WikisController, type: :controller do
       end
 
       it "increases the number of private wikis by 1" do
-        expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: true} }.to change(Wiki, :count).by(1)
+        expect { post :create, wiki: { title: RandomData.random_sentence, body: RandomData.random_paragraph, private: true } }.to change(Wiki, :count).by(1)
       end
 
       it "redirects to the new private wiki" do

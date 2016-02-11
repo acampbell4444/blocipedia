@@ -38,9 +38,7 @@ class User < ActiveRecord::Base
   end
 
   def downgrade
-    if self.standard?
-      self.wikis.where(private: true).update_all(private: false)
-    end
+    wikis.where(private: true).update_all(private: false) if standard?
   end
 
   private

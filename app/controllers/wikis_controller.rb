@@ -34,7 +34,7 @@ class WikisController < ApplicationController
 
     if @wiki.save
       flash[:notice] = 'Wiki was saved.'
-        redirect_to wiki_path(@wiki)
+      redirect_to wiki_path(@wiki)
     else
       flash.now[:alert] = 'There was an error saving the wiki. Please try again.'
       render new_wiki_path
@@ -43,16 +43,16 @@ class WikisController < ApplicationController
 
   def update
     @wiki = Wiki.find(params[:id])
-      @wiki.assign_attributes(wiki_params)
-      authorize @wiki
+    @wiki.assign_attributes(wiki_params)
+    authorize @wiki
 
-      if @wiki.save
-        flash[:notice] = 'Wiki was saved.'
-        redirect_to wiki_path(@wiki)
-      else
-        flash.now[:alert] = 'There was an error saving the wiki. Please try again.'
-        render edit_wiki_path
-      end
+    if @wiki.save
+      flash[:notice] = 'Wiki was saved.'
+      redirect_to wiki_path(@wiki)
+    else
+      flash.now[:alert] = 'There was an error saving the wiki. Please try again.'
+      render edit_wiki_path
+    end
     end
 
   def destroy
@@ -103,5 +103,4 @@ class WikisController < ApplicationController
       [:title, :body]
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class ChargesController < ApplicationController
-
   def create
     customer = Stripe::Customer.create(
       email: current_user.email,
@@ -12,7 +11,7 @@ class ChargesController < ApplicationController
         description: "Premium Wiki Membership - #{current_user.email}",
         currency: 'usd'
       )
-      current_user.update_attributes!( role: 'premium')
+      current_user.update_attributes!(role: 'premium')
       flash[:notice] = "Thanks for upgrading, #{current_user.email}!"
       redirect_to wikis_path
     end
@@ -25,12 +24,10 @@ class ChargesController < ApplicationController
   def new
     if current_user.standard?
       @stripe_btn_data = {
-        key: "#{ Rails.configuration.stripe[:publishable_key] }",
+        key: Rails.configuration.stripe[:publishable_key].to_s,
         description: "Premium Wiki Membership - #{current_user.name}",
         amount: 15_00
       }
     end
   end
-
-
 end
