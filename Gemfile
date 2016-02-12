@@ -43,4 +43,6 @@ gem "faker", "~> 1.6.1"
 
 gem 'stripe'
 
+gem 'redcarpet', '~> 3.0.0'
+
 gem 'figaro', '1.0'

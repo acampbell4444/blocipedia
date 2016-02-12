@@ -60,35 +60,14 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def show_authorization
-    if !wiki.private
-      true
-    else
-      if !user.present? || user.standard?
-        false
-      elsif (user.premium? && (user == wiki.user)) || user.admin?
-        true
-      end
-    end
+    user.present? && (wiki.private && ((user.premium? && user == wiki.user) || user.admin?)) || !wiki.private
   end
 
   def edit_update_authorization
-    if !wiki.private
-      if user.present?
-        true
-      else
-        false
-      end
-    else
-      if !user.present? || user.standard?
-        false
-      elsif
-        (user.premium? && (user == wiki.user)) || user.admin?
-        true
-      end
-    end
+    (!wiki.private && user.present?) || (user.premium? && (user == wiki.user)) || user.admin?
   end
 
   def destroy_authorization
-    user == wiki.user || user.admin?
+    (user == wiki.user) || user.admin?
   end
 end

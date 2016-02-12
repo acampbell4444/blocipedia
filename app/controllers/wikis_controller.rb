@@ -53,28 +53,21 @@ class WikisController < ApplicationController
       flash.now[:alert] = 'There was an error saving the wiki. Please try again.'
       render edit_wiki_path
     end
-    end
+  end
 
   def destroy
     @wiki = Wiki.find(params[:id])
     authorize @wiki
 
-    if !@wiki.private
-      if @wiki.delete
-        flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
-        redirect_to action: :index
-      else
-        flash.now[:alert] = 'There was an error deleting the wiki.'
-        render :show
-      end
+    if !@wiki.private && @wiki.delete
+      flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
+      redirect_to action: :index
+    elsif @wiki.private && @wiki.delete
+      flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
+      redirect_to wikis_private_index_path
     else
-      if @wiki.delete
-        flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
-        redirect_to wikis_private_index_path
-      else
-        flash.now[:alert] = 'There was an error deleting the wiki.'
-        render :show
-      end
+      flash.now[:alert] = 'There was an error deleting the wiki.'
+      render :show
     end
   end
 

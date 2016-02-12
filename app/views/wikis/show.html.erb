@@ -4,7 +4,7 @@
     <h3 class="media-heading">
       <strong><%= @wiki.title %></strong><br><br>
     </h3>
-    <%= @wiki.body %><br><br>
+    <%= markdown(@wiki.body) %><br><br>
 
     <small>
       <p style="color:gray">
