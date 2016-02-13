@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :roles
-  has_many :wikis
+  has_many :wikis, through: :collaborators
+  has_many :collaborators
 
   before_create :set_default_role
   after_save :downgrade

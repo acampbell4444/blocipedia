@@ -59,5 +59,14 @@ user.update_attributes!(
   password: 'password',
   role: 'standard'
 )
+
+user = User.fourth
+user.skip_reconfirmation!
+user.update_attributes!(
+name: 'premium2',
+email: 'premium2@example.com',
+password: 'password',
+role: 'premium'
+)
  puts "#{User.count} users created"
  puts "#{Wiki.count} wikis created"

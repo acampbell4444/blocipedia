@@ -2,21 +2,21 @@ class WikiPolicy < ApplicationPolicy
   attr_reader :user, :wiki
 
   class Scope
-    attr_reader :user, :scope
+     attr_reader :user, :scope
 
-    def initialize(user, scope)
-      @user  = user
-      @scope = scope
-    end
+     def initialize(user, scope)
+       @user = user
+       @scope = scope
+     end
 
-    def resolve
-      if user.nil? || user.standard?
-        scope.where(private: false)
-      elsif user.admin_premium?
-        scope.all
+      def resolve
+        if user.nil? || user.standard?
+          scope.where(private: false)
+        elsif user.admin_premium?
+          scope.all
+        end
       end
     end
-  end
 
   def initialize(user, wiki)
     @user = user

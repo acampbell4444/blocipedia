@@ -6,6 +6,7 @@ RSpec.describe Wiki, type: :model do
   let(:my_wiki1) { create(:wiki, user: my_user) }
 
   it { should belong_to(:user) }
+  it { should have_many(:collaborators) }
 
   it { should validate_presence_of(:title) }
   it { should validate_presence_of(:body) }

@@ -31,14 +31,14 @@
       <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: "Enter Wiki body" %>
     <% end %>
 
-    <% if ((current_user.premium? && @wiki.user == current_user) || current_user.admin?)  %>
+  <% if current_user.admin? || (current_user.premium? && (wiki.title.nil? || (wiki.user == current_user)))  %>
       <div class="form-group">
       <div style="padding-left:20px">
         <%=f.label :private, class: 'checkbox' do %>
         <%= f.check_box :private %> Private Wiki
       </div>
       </div>
-    <% end %>
+      <% end %>
     <% end %>
 
     <div class="form-group">
@@ -47,3 +47,12 @@
   </div>
 <% end %>
 </div>
+
+<%  if @wiki.id? %>
+   <% if current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)) %>
+     <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success' %>
+   <% end %>
+ <% end %>
+ <% @wiki.collaborators.each do |collaborator| %>
+<%= collaborator.user.email %> <br>
+<% end %>

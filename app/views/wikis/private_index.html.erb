@@ -3,7 +3,7 @@
   <%= link_to "Create a New Wiki", new_wiki_path, class: 'btn btn-success' %><br><br>
 
   <% @wikis.each do |wiki| %>
-    <% if wiki.private && (current_user.admin? || (current_user.premium? && current_user.wikis.include?(wiki))) %>
+    <% if wiki.private  %>
       <p><%= link_to wiki.title, wiki %>
       <small>Created by <%= wiki.user.name || wiki.user.email%></small>
       </p>

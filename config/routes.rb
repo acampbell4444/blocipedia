@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   get '/wikis/private_index' => 'wikis#private_index'
-  resources :wikis
+
+  resources :wikis do
+    resources :collaborators, only: [:index, :destroy]
+    match '/collaborators/:id' => 'collaborators#create', :via => :post
+
+  end
+
   resources :charges, only: [:new, :create]
 
   devise_for :users

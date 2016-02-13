@@ -28,4 +28,10 @@
   <% if current_user.admin? || ((current_user.standard? || current_user.premium?) && @wiki.user == current_user) %>
   <%= link_to "Delete Wiki", [@wiki], method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this Wiki?' } %></br>
   <% end %>
-<% end %>
+<% end %><br><br>
+
+<h3>Collaborators</h3><br>
+
+<% @wiki.collaborators.each do |x| %>
+  <%= x.user.email %><br>
+  <% end %>

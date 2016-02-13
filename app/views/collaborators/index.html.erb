@@ -1,0 +1,15 @@
+<br><br><br>
+
+<h2 style="color:blue">Collaborators For:&nbsp&nbsp&nbsp<%=@wiki.title %></h2>
+
+<br><br>
+<div style=padding-left:45px>
+<% @collaborators.each do |c| %>
+  <%= c.email %>
+  <% if @wiki.collaborators.pluck("user_id").include?(c.id) %>&nbsp&nbsp&nbsp
+    <%= link_to "Delete Collaborator", wiki_collaborator_path(@wiki, c.id), method: :delete, id: "collaborator-#{c.id}", class: 'btn btn-danger'%></br>
+  <% else %>
+    <%= link_to "Add Collaborator", wiki_collaborator_path(@wiki, c.id), method: :post, id: "collaborator-#{c.id}", class: 'btn btn-success'%></br>
+  <% end %>
+<% end %>
+</div>

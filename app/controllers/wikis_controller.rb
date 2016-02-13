@@ -8,8 +8,10 @@ class WikisController < ApplicationController
   end
 
   def private_index
-    @wikis = policy_scope(Wiki).where(private: true)
+    @wikis = policy_scope(Wiki).where(private: true, user_id: [current_user.id])### add more to this array to allow colllaborators
     authorize @wikis
+
+
   end
 
   def show
