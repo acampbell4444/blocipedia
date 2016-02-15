@@ -16,7 +16,12 @@
       <ul>
         <li>No Naughty Words.</li><br>
         <li>Title Must be 150 Characters or Less</li><br>
-        <li>Body Must be 500 Characters or Less</li>
+        <li>Body Must be 500 Characters or Less</li><br><br>
+        <%  if @wiki.id? %>
+           <% if wiki.private && (current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)))%>
+             <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success' %>
+           <% end %>
+         <% end %>
       </ul>
     </div>
 
@@ -47,14 +52,3 @@
   </div>
 <% end %>
 </div>
-
-<%  if @wiki.id? %>
-   <% if wiki.private && (current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)))%>
-     <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success' %>
-   <% end %>
- <% end %>
- <% @wiki.collaborators.each do |collaborator| %>
-<%= collaborator.user.email %> <br>
-<% end %>
-
-<%= @wiki.collaborators.pluck("user_id")%>

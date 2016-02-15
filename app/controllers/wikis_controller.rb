@@ -4,12 +4,11 @@ class WikisController < ApplicationController
 
   def index
     @wikis = Wiki.where(private: false)
-  #  @wikis = policy_scope(Wiki.where(private: false))
     authorize @wikis
   end
 
   def private_index
-    @wikis = policy_scope(Wiki)
+    @wikis = Wiki.where(private: true)
     authorize @wikis
   end
 

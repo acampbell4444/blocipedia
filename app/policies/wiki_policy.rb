@@ -13,18 +13,9 @@ class WikiPolicy < ApplicationPolicy
       @user = user
       @scope = scope
     end
-
-    def resolve
-      wikis = Wiki.where(private:true)
-      #wiki_collector = []
-
-      #wikis.each do |wiki|
-      #  if wiki.collaborators.include?(user)
-          #wiki_collector << wiki
-      #  end
-      #end
-      #wiki_collector
-    end
+    
+    #def resolve
+    #end
   end
 
   def new?
