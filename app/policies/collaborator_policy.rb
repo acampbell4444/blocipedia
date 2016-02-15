@@ -10,9 +10,7 @@ class CollaboratorPolicy < ApplicationPolicy
     end
 
     def resolve
-      if @user.admin_premium?
-        scope.where(user.admin_premium?)
-      end
+      scope.where(user.admin_premium?) if @user.admin_premium?
     end
   end
 

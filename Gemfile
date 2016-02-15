@@ -16,6 +16,7 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda'
+  #gem 'pundit-matchers', '~> 1.0.0'
 end
 
 # Use SCSS for stylesheets

@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   has_many :collaborators
 
   before_create :set_default_role
-  after_save :downgrade
+  #after_initialize :downgrade
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
@@ -38,9 +38,11 @@ class User < ActiveRecord::Base
     update(role: 'admin')
   end
 
-  def downgrade
-    wikis.where(private: true).update_all(private: false) if standard?
-  end
+  #def downgrade
+  #  if current_user.standard?
+  #    Wiki.where(private: true).update_all(private: false)
+  #  end
+  #end
 
   private
 

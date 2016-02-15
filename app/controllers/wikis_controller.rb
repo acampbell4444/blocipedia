@@ -1,18 +1,18 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  after_action :verify_policy_scoped, only: [:index, :private]
+  #after_action :verify_policy_scoped, only: [:index, :private_index]
 
   def index
-    @wikis = policy_scope(Wiki).where(private: false)
+    @wikis = Wiki.where(private: false)
+  #  @wikis = policy_scope(Wiki.where(private: false))
     authorize @wikis
   end
 
   def private_index
-    @wikis = policy_scope(Wiki).where(private: true, user_id: [current_user.id])### add more to this array to allow colllaborators
+    @wikis = policy_scope(Wiki)
     authorize @wikis
-
-
   end
+
 
   def show
     @wiki = Wiki.find(params[:id])
@@ -22,6 +22,7 @@ class WikisController < ApplicationController
   def new
     @user = current_user
     @wiki = Wiki.new
+    authorize @wiki
   end
 
   def edit
@@ -92,7 +93,7 @@ class WikisController < ApplicationController
   end
 
   def permitted_attributes
-    if current_user.admin_premium? && @wiki.user == current_user
+    if current_user.admin_premium? && (@wiki.user == current_user)
       [:title, :body, :private]
     else
       [:title, :body]

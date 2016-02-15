@@ -49,10 +49,12 @@
 </div>
 
 <%  if @wiki.id? %>
-   <% if current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)) %>
+   <% if wiki.private && (current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)))%>
      <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success' %>
    <% end %>
  <% end %>
  <% @wiki.collaborators.each do |collaborator| %>
 <%= collaborator.user.email %> <br>
 <% end %>
+
+<%= @wiki.collaborators.pluck("user_id")%>
