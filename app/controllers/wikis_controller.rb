@@ -1,6 +1,6 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  #after_action :verify_policy_scoped, only: [:index, :private_index]
+  after_action :verify_policy_scoped, only: [:private_index]
 
   def index
     @wikis = Wiki.where(private: false)
@@ -8,10 +8,8 @@ class WikisController < ApplicationController
   end
 
   def private_index
-    @wikis = Wiki.where(private: true)
-    authorize @wikis
+    @wikis = policy_scope(Wiki)
   end
-
 
   def show
     @wiki = Wiki.find(params[:id])

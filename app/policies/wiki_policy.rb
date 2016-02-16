@@ -13,9 +13,23 @@ class WikiPolicy < ApplicationPolicy
       @user = user
       @scope = scope
     end
-    
-    #def resolve
-    #end
+
+    def resolve
+      if user.premium?
+        wikis = []
+        all_wikis = scope.all
+        all_wikis.each do |wiki|
+          if (wiki.private && wiki.user == user) || wiki.users.include?(user)
+            wikis << wiki # i
+          end
+        end
+      elsif user.admin?
+        wikis = scope.where(private: true)
+      else
+        wikis = nil
+      end
+      wikis
+    end
   end
 
   def new?
@@ -27,28 +41,28 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def edit?
-    edit_update_authorization if !user.nil?
+    edit_update_authorization unless user.nil?
   end
 
   def update?
-    edit_update_authorization if !user.nil?
+    edit_update_authorization unless user.nil?
   end
 
   def destroy?
-    destroy_authorization if !user.nil?
+    destroy_authorization unless user.nil?
   end
 
   def show?
     show_authorization
   end
 
-  def private_index?
-    if !(user.nil?)
-      user.admin_premium?
-    else
-      false
-    end
-  end
+  # def private_index?
+  #  if !(user.nil?)
+  #    user.admin_premium?
+  #  else
+  #    false
+  #  end
+  # end
 
   def index?
     user.nil? || user.present?

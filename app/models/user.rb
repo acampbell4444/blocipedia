@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   end
 
   def downgrade
-    if self.role == 'standard'
+    if role == 'standard'
       Wiki.where(user: self, private: true).update_all(private: false)
     end
   end

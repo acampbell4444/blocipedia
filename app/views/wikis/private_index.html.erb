@@ -5,11 +5,11 @@
 <% if @wikis %>
   <% @wikis.each do |wiki| %>
   <%  collab_ids = wiki.collaborators.pluck("user_id") %>
-  <% if (collab_ids.include?(current_user.id) || wiki.user == current_user || current_user.admin?)%>
+
       <p><%= link_to wiki.title, wiki %>
       <small>Created by <%= wiki.user.name || wiki.user.email%></small>
       </p>
     <%end%>
-  <% end %>
+
 <% end %>
 <% end %>
