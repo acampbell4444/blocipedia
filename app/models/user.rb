@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   has_many :wikis, through: :collaborators
   has_many :collaborators
 
+  validates :name, length: { maximum: 12 }
+
   before_create :set_default_role
   after_initialize :downgrade
   # Include default devise modules. Others available are:
