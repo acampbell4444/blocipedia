@@ -16,6 +16,7 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda'
+  # gem 'pundit-matchers', '~> 1.0.0'
 end
 
 # Use SCSS for stylesheets
@@ -42,5 +43,7 @@ gem 'factory_girl_rails', '~> 4.0'
 gem "faker", "~> 1.6.1"
 
 gem 'stripe'
+
+gem 'redcarpet', '~> 3.0.0'
 
 gem 'figaro', '1.0'

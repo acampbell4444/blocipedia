@@ -1,12 +1,25 @@
-<% if current_user.admin_premium? %>
-  <h1>My Private Wikis</h1><br>
-  <%= link_to "Create a New Wiki", new_wiki_path, class: 'btn btn-success' %><br><br>
 
-  <% @wikis.each do |wiki| %>
-    <% if wiki.private && (current_user.admin? || (current_user.premium? && current_user.wikis.include?(wiki))) %>
+
+<div style='padding-left:30px'><br><br>
+  <div class='row'>
+  <h1>Private Wikis
+  <% if current_user.admin_premium? %>
+    <div class="btn btn-success btn-xs">
+      <span class="glyphicon glyphicon-plus">
+        <%= link_to "CreateNew", new_wiki_path,style: "color:white; font-weight:bold" %><br>
+      </span>
+    </div>
+  <% end %>
+  </h1>
+  </div><br>
+
+
+  <% if @wikis %>
+    <% @wikis.each do |wiki| %>
+      <% collab_ids = wiki.collaborators.pluck("user_id") %>
       <p><%= link_to wiki.title, wiki %>
-      <small>Created by <%= wiki.user.name || wiki.user.email%></small>
+        <small>Created by <%= wiki.user.name || wiki.user.email%></small>
       </p>
     <%end%>
   <% end %>
-<% end %>
+</div>

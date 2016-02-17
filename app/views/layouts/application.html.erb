@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Blocipedia</title>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
@@ -10,8 +11,14 @@
 <body>
   <div class="container">
     <ul class="nav nav-tabs">
-      <li><%= link_to "Home", welcome_index_path %></li>
-      <li><%= link_to "About", welcome_about_path %></li>
+      <li style="font-weight:bold"><%= link_to "Home", welcome_index_path %></li>
+      <li style="font-weight:bold"><%= link_to "About", welcome_about_path %></li>
+      <% if user_signed_in? %>
+        <li style="font-weight:bold;float:right"> <%= link_to "#{current_user.email}", edit_user_registration_path %></li>
+      <% else %>
+        <li style="font-weight:bold"><%= link_to "Sign Up", new_user_registration_path, :class => 'navbar-link'  %></li>
+        <li style="font-weight:bold"><%= link_to "Sign In", new_user_session_path, :class => 'navbar-link'  %></li>
+        <% end%>
     </ul>
 
     <% if flash[:notice] %>
@@ -30,31 +37,58 @@
         <%= flash[:alert] %>
       </div>
     <% end %>
-
+<small>
+  <small>
     <div class="row">
-    <div style="float:left">
+    <div style="float:left;padding-top:5px">
+
     <% if user_signed_in? %>
-      Signed in as: <strong><%= current_user.name || current_user.email %></strong> |
-
       <% if current_user.standard? %>
-        <%= link_to "Upgrade to Premium", new_charge_path, :class => 'navbar-link'  %> |
+      <div class="btn btn-info btn-xs">
+        <span class="glyphicon glyphicon-hand-up">
+        <%= link_to "Upgrade to Premium", new_charge_path, class: 'navbar-link', style:"color:white"  %>
+      </span>
+    </div>
       <% elsif current_user.premium? %>
-        <%= link_to "Downgrade to Standard", edit_user_registration_path, :class => 'navbar-link'  %> |
+
+      <div class="btn btn-info btn-xs">
+        <span class="glyphicon glyphicon-hand-down">
+        <%= link_to "DowngradeToStandard", edit_user_registration_path, :class => 'navbar-link', style:"color:white"  %>
+       </span>
+      </div>
       <% end %>
-        <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> | <%= link_to "Sign Out", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
-    <% else %>
-        <%= link_to "Sign Up", new_user_registration_path, :class => 'navbar-link'  %> -
-        <%= link_to "Sign In", new_user_session_path, :class => 'navbar-link'  %>
-    <% end %>
+
+      <div class="btn btn-info btn-xs">
+        <span class="glyphicon glyphicon-cog">
+        <%= link_to 'AccountSettings', edit_user_registration_path, class: 'navbar-link', style:"color:white" %>
+        </span>
+      </div>
+      <div class="btn btn-info btn-xs">
+        <span class="glyphicon glyphicon-log-out">
+        <%= link_to "SignOut", destroy_user_session_path, method: :delete, class: 'navbar-link', style:"color:white"  %>
+        </span>
+      </div>
+     <% end %>
     </div>
 
-    <div style="float:right">
-      <%= link_to "Public Wikis",wikis_path, :class => 'navbar-link'  %>
+    <div style="float:right;padding-top:5px">
+      <div class="btn btn-warning btn-xs">
+        <span class="glyphicon glyphicon-list-alt">
+        <%= link_to "PublicWikis",wikis_path, class: 'navbar-link', style:"color:white"  %>
+        </span>
+      </div>
+
       <% if current_user != nil && current_user.admin_premium? %>
-      - <%= link_to "Private Wikis", wikis_private_index_path, :class => 'navbar-link'  %>
-      <% end %>
+      <div class="btn btn-warning btn-xs">
+        <span class="glyphicon glyphicon-list-alt">
+      <%= link_to "PrivateWikis", wikis_private_index_path, :class => 'navbar-link', style:"color:white"  %>
+       </span>
+      </div>
+       <% end %>
     </div>
-  </div>
+  </small>
+  </small>
+
 
 
 

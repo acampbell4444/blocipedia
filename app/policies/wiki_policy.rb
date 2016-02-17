@@ -1,26 +1,35 @@
 class WikiPolicy < ApplicationPolicy
   attr_reader :user, :wiki
 
+  def initialize(user, wiki)
+    @user = user
+    @wiki = wiki
+  end
+
   class Scope
     attr_reader :user, :scope
 
     def initialize(user, scope)
-      @user  = user
+      @user = user
       @scope = scope
     end
 
     def resolve
-      if user.nil? || user.standard?
-        scope.where(private: false)
-      elsif user.admin_premium?
-        scope.all
+      if user.premium?
+        wikis = []
+        all_wikis = scope.all
+        all_wikis.each do |wiki|
+          if (wiki.private && wiki.user == user) || wiki.users.include?(user)
+            wikis << wiki # i
+          end
+        end
+      elsif user.admin?
+        wikis = scope.where(private: true)
+      else
+        wikis = nil
       end
+      wikis
     end
-  end
-
-  def initialize(user, wiki)
-    @user = user
-    @wiki = wiki
   end
 
   def new?
@@ -32,63 +41,52 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def edit?
-    edit_update_authorization
+    edit_update_authorization unless user.nil?
   end
 
   def update?
-    edit_update_authorization
+    edit_update_authorization unless user.nil?
   end
 
   def destroy?
-    destroy_authorization
+    destroy_authorization unless user.nil?
   end
 
   def show?
     show_authorization
   end
 
-  def private_index?
-    user.admin_premium?
-  end
+  # def private_index?
+  #  if !(user.nil?)
+  #    user.admin_premium?
+  #  else
+  #    false
+  #  end
+  # end
 
   def index?
-    user.nil? || user
+    user.nil? || user.present?
   end
 
   def create_authorization
-    user.present?
+    wiki.private ? user.admin_premium? : user.present?
   end
 
   def show_authorization
-    if !wiki.private
-      true
-    else
-      if !user.present? || user.standard?
-        false
-      elsif (user.premium? && (user == wiki.user)) || user.admin?
-        true
-      end
-    end
+    (user.present? && (private_show || !wiki.private)) || (user.nil? && !wiki.private)
+  end
+
+  def private_show
+    collab_ids = wiki.collaborators.pluck("user_id")
+    wiki.private && ((user.premium? && (user == wiki.user)) || user.admin?) || collab_ids.include?(user.id)
   end
 
   def edit_update_authorization
-    if !wiki.private
-      if user.present?
-        true
-      else
-        false
-      end
-    else
-      if !user.present? || user.standard?
-        false
-      elsif
-        (user.premium? && (user == wiki.user)) || user.admin?
-        true
-      end
-    end
+    collab_ids = wiki.collaborators.pluck("user_id")
+    (!wiki.private && user.present?) || (user.premium? && (user == wiki.user)) || user.admin? || collab_ids.include?(user.id)
   end
 
   def destroy_authorization
-    user == wiki.user || user.admin?
+    (user == wiki.user) || user.admin?
   end
 end

@@ -1,9 +1,12 @@
 class User < ActiveRecord::Base
   has_many :roles
-  has_many :wikis
+  has_many :wikis, through: :collaborators
+  has_many :collaborators
+
+  validates :name, length: { maximum: 12 }
 
   before_create :set_default_role
-  after_save :downgrade
+  after_initialize :downgrade
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
@@ -38,7 +41,9 @@ class User < ActiveRecord::Base
   end
 
   def downgrade
-    wikis.where(private: true).update_all(private: false) if standard?
+    if role == 'standard'
+      Wiki.where(user: self, private: true).update_all(private: false)
+    end
   end
 
   private

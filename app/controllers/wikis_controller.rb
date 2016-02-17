@@ -1,15 +1,14 @@
 class WikisController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  after_action :verify_policy_scoped, only: [:index, :private]
+  after_action :verify_policy_scoped, only: [:private_index]
 
   def index
-    @wikis = policy_scope(Wiki).where(private: false)
+    @wikis = Wiki.where(private: false)
     authorize @wikis
   end
 
   def private_index
-    @wikis = policy_scope(Wiki).where(private: true)
-    authorize @wikis
+    @wikis = policy_scope(Wiki)
   end
 
   def show
@@ -20,6 +19,7 @@ class WikisController < ApplicationController
   def new
     @user = current_user
     @wiki = Wiki.new
+    authorize @wiki
   end
 
   def edit
@@ -53,28 +53,21 @@ class WikisController < ApplicationController
       flash.now[:alert] = 'There was an error saving the wiki. Please try again.'
       render edit_wiki_path
     end
-    end
+  end
 
   def destroy
     @wiki = Wiki.find(params[:id])
     authorize @wiki
 
-    if !@wiki.private
-      if @wiki.delete
-        flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
-        redirect_to action: :index
-      else
-        flash.now[:alert] = 'There was an error deleting the wiki.'
-        render :show
-      end
+    if !@wiki.private && @wiki.delete
+      flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
+      redirect_to action: :index
+    elsif @wiki.private && @wiki.delete
+      flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
+      redirect_to wikis_private_index_path
     else
-      if @wiki.delete
-        flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
-        redirect_to wikis_private_index_path
-      else
-        flash.now[:alert] = 'There was an error deleting the wiki.'
-        render :show
-      end
+      flash.now[:alert] = 'There was an error deleting the wiki.'
+      render :show
     end
   end
 
@@ -97,7 +90,7 @@ class WikisController < ApplicationController
   end
 
   def permitted_attributes
-    if current_user.admin_premium? && @wiki.user == current_user
+    if current_user.admin_premium? && (@wiki.user == current_user)
       [:title, :body, :private]
     else
       [:title, :body]

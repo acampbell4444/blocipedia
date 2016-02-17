@@ -1,0 +1,13 @@
+<% collaborators.each do |c| %>
+  <tr>
+    <th><%= c.name %></th>
+    <td><%= c.email %></td>
+    <td>
+      <% if wiki.collaborators.pluck("user_id").include?(c.id) %>
+        <%= link_to 'Remove Collaborator', wiki_collaborator_path(wiki, c.id), method: :delete, class: 'btn btn-danger', id: "collaborators-#{c.id}" %>
+      <% else %>
+        <%= link_to 'Add Collaborator', wiki_collaborator_path(wiki, c.id), method: :post, class: 'btn btn-success', id: "collaborators-#{c.id}" %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

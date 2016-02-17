@@ -1,13 +1,12 @@
 
-<div>
 <%= form_for [wiki] do |f| %>
   <% if wiki.errors.any? %>
-  <div class="alert alert-danger">
+    <div class="alert alert-danger">
     <h4><%= pluralize(wiki.errors.count, "error") %></h4>
       <% wiki.errors.full_messages.each do |msg| %>
         <p><%= msg %><p>
       <% end %>
-  </div>
+    </div>
   <% end %>
 
   <div class="row">
@@ -16,34 +15,34 @@
       <ul>
         <li>No Naughty Words.</li><br>
         <li>Title Must be 150 Characters or Less</li><br>
-        <li>Body Must be 500 Characters or Less</li>
+        <li>Body Must be 500 Characters or Less</li><br><br>
       </ul>
     </div>
 
-    <div class="col-md-8">
-    <%= form_group_tag(wiki.errors[:title]) do %>
-      <%= f.label :title %>
-      <%= f.text_field :title, class: 'form-control', placeholder: "Enter Wiki title" %>
-    <% end %>
+      <div class="col-md-8">
+      <%= form_group_tag(wiki.errors[:title]) do %>
+        <%= f.label :title %>
+        <%= f.text_field :title, class: 'form-control', placeholder: "Enter Wiki title" %>
+      <% end %>
 
-    <%= form_group_tag(wiki.errors[:body]) do %>
-      <%= f.label :body %>
-      <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: "Enter Wiki body" %>
-    <% end %>
+      <%= form_group_tag(wiki.errors[:body]) do %>
+        <%= f.label :body %>
+        <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: "Enter Wiki body" %>
+      <% end %>
 
-    <% if ((current_user.premium? && @wiki.user == current_user) || current_user.admin?)  %>
-      <div class="form-group">
-      <div style="padding-left:20px">
-        <%=f.label :private, class: 'checkbox' do %>
-        <%= f.check_box :private %> Private Wiki
-      </div>
-      </div>
-    <% end %>
+    <% if current_user.admin? || (current_user.premium? && (wiki.title.nil? || (wiki.user == current_user)))  %>
+        <div class="form-group">
+          <div style="padding-left:20px">
+            <%=f.label :private, class: 'checkbox' do %>
+            <%= f.check_box :private %> Private Wiki
+          </div>
+        </div>
+      <% end %>
     <% end %>
 
     <div class="form-group">
-      <%= f.submit "Save", class: 'btn btn-success' %>
+      <%= f.submit "Save", class: 'btn btn-success btn-xs' %>
     </div>
   </div>
-<% end %>
+  <% end %>
 </div>

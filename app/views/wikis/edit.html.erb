@@ -1,5 +1,13 @@
-<h1 style="color:blue">Edit Wiki</h1>
-  <div class="col-md-8">
-     <%= render partial: 'form', locals: {wiki: @wiki} %>
+<br><br>
+<div class="row">
+  <div style="float:left">
+    <h1 style="color:blue">Edit Wiki</h1>
   </div>
-</div>
+    <% if @wiki.id? %>
+      <% if @wiki.private && (current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)))%><br><br><br><br>
+        <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success btn-xs' %>
+      <% end %>
+    <% end %>
+</div><br><br>
+
+  <%= render partial: 'form', locals: {wiki: @wiki} %>
