@@ -20,7 +20,7 @@ class WikiPolicy < ApplicationPolicy
         all_wikis = scope.all
         all_wikis.each do |wiki|
           if (wiki.private && wiki.user == user) || wiki.users.include?(user)
-            wikis << wiki # i
+            wikis << wiki
           end
         end
       elsif user.admin?
@@ -56,13 +56,13 @@ class WikiPolicy < ApplicationPolicy
     show_authorization
   end
 
-  # def private_index?
-  #  if !(user.nil?)
-  #    user.admin_premium?
-  #  else
-  #    false
-  #  end
-  # end
+#  def private_index?
+#    if !(user.nil?)
+#      user.admin_premium?
+#    else
+#      false
+#    end
+#  end
 
   def index?
     user.nil? || user.present?

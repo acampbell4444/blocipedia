@@ -1,6 +1,4 @@
 class CollaboratorsController < ApplicationController
-  # ##refactor
-  # /wikis/:wiki_id/collaborators/:id(.:format)
 
   def index
     @wiki = Wiki.find(params[:wiki_id])
