@@ -7,8 +7,6 @@ class Wiki < ActiveRecord::Base
   validates :body, length: { maximum: 750 }, presence: true
   validates :user, presence: true
 
-  before_save :update_slug
-
   default_scope { order('title ASC') }
 
   def to_param
