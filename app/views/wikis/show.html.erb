@@ -2,35 +2,32 @@
 <div class="jumbotron">
   <div class="media">
     <div class="media-body">
-    <h3 class="media-heading"><br>
-    <strong><%= @wiki.title %></strong><br><br>
-    </h3>
+    <h2 class="media-heading"><br>
+    <strong><%= markdown(@wiki.title) %></strong><br>
+    </h2>
       <div style="row; padding-left:20px">
         <%= markdown(@wiki.body) %><br>
       </div>
       <small>
-      <p style="color:gray; font-size:15px">
-        This
-          <% if @wiki.private %>
-            <span style="color:orange">Private</span>
-          <% elsif !@wiki.private %>
+      <p style="color:gray; font-size:15px">This
+      <% if @wiki.private %>
+        <span style="color:orange">Private</span>
+      <% elsif !@wiki.private %>
         <span style="color:orange">Public</span>
-          <% end %>
-          Wiki was Submitted
-         <%= time_ago_in_words(@wiki.created_at) %> ago by   <%= @wiki.user.name || @wiki.user.email %>
+      <% end %>
+      Wiki was Submitted<%= time_ago_in_words(@wiki.created_at) %> ago by   <%= @wiki.user.name || @wiki.user.email %>
       </p>
       </small><br>
-     </div>
-    </div>
-
+   </div>
+  </div>
 
   <% if current_user != nil  %>
     <%= link_to "Edit Wiki", edit_wiki_path(@wiki), class: 'btn btn-success btn-xs' %>
-    <% if current_user.admin? || ((current_user.standard? || current_user.premium?) && @wiki.user == current_user) %>
-      <%= link_to "Delete Wiki", [@wiki], method: :delete, class: 'btn btn-danger btn-xs', data: { confirm: 'Are you sure you want to delete this Wiki?' } %></br>
-    <% end %>
+      <% if current_user.admin? || ((current_user.standard? || current_user.premium?) && @wiki.user == current_user) %>
+        <%= link_to "Delete Wiki", [@wiki], method: :delete, class: 'btn btn-danger btn-xs', data: { confirm: 'Are you sure you want to delete this Wiki?' } %></br>
+      <% end %>
   <% end %>
-  </div>
+</div>
 
   <% if @wiki.collaborators.present? %>
     <h3>Collaborators</h3>

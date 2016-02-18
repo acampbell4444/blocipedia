@@ -56,13 +56,13 @@ class WikiPolicy < ApplicationPolicy
     show_authorization
   end
 
-#  def private_index?
-#    if !(user.nil?)
-#      user.admin_premium?
-#    else
-#      false
-#    end
-#  end
+  #  def private_index?
+  #    if !(user.nil?)
+  #      user.admin_premium?
+  #    else
+  #      false
+  #    end
+  #  end
 
   def index?
     user.nil? || user.present?

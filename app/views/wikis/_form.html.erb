@@ -10,12 +10,17 @@
   <% end %>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4"><br>
       <p>Guidelines for Wikis:</p>
       <ul>
         <li>No Naughty Words.</li><br>
         <li>Title Must be 150 Characters or Less</li><br>
         <li>Body Must be 750 Characters or Less</li><br><br>
+          <% if @wiki.id? %>
+            <% if @wiki.private && (current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)))%><br><br><br><br>
+              <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success btn-xs' %>
+            <% end %>
+          <% end %>
       </ul>
     </div>
 
