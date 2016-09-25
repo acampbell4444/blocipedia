@@ -1,24 +1,24 @@
 
-
-<div style='padding-left:30px'><br><br>
-  <div class='row'>
-  <h1>Private Wikis
+<br><br><br>
+<div class="jumbotron">
+  <h2 style="float:left">Private Wikis</h2><br><br>
   <% if current_user.admin_premium? %>
+  <div style="float:right">
     <div class="btn btn-success btn-xs">
       <span class="glyphicon glyphicon-plus">
         <%= link_to "CreateNew", new_wiki_path,style: "color:white; font-weight:bold" %><br>
       </span>
     </div>
+  </div>
   <% end %>
-  </h1>
-  </div><br>
+</div>
 
-
+<div style="padding-left:30px">
   <% if @wikis %>
     <% @wikis.each do |wiki| %>
       <% collab_ids = wiki.collaborators.pluck("user_id") %>
       <p><%= link_to wiki.title, wiki %>
-        <small>Created by <%= wiki.user.name || wiki.user.email%></small>
+      <small>Created by <%= wiki.user.name || wiki.user.email%></small>
       </p>
     <%end%>
   <% end %>

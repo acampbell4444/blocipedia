@@ -1,9 +1,15 @@
 
-<% if current_user.standard? %>
-  <%= form_tag charges_path do %>
-    <h4>Upgrade To Premium for only $15!</h4>
-    <script class='stripe-button' src="https://checkout.stripe.com/checkout.js" data-key="<%= @stripe_btn_data[:key] %>" data-amount=<%= @stripe_btn_data[:amount] %> data-description="<%= @stripe_btn_data[:description] %>" ></script>
+<% if current_user.standard? %><br><br><br><br>
+<div class="jumbotron">
+  <h2 style="text-align:center">Upgrade To Premium for only $15!</h2><br>
+  <p style="text-align:center">As a premium member, you have the ability to manage your own Private Wikis<p>
+  <p style="text-align:center">By adding Collaborators, you can create a network of authorized Wiki Contributors for your Wiki!<p><br>
+  <div style="padding-left:475px">
+    <%= form_tag charges_path do %>
+      <script class='stripe-button' src="https://checkout.stripe.com/checkout.js" data-key="<%= @stripe_btn_data[:key] %>" data-amount=<%= @stripe_btn_data[:amount] %> data-description="<%= @stripe_btn_data[:description] %>" ></script>
   <% end %>
 <% else %>
   You are already Upgraded to Premium!
 <% end %>
+  <div>
+</div>

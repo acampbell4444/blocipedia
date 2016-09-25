@@ -1,13 +1,20 @@
 <br><br>
-<div class="row">
-  <div style="float:left">
-    <h1 style="color:blue">Edit Wiki</h1>
-  </div>
-    <% if @wiki.id? %>
-      <% if @wiki.private && (current_user.admin? || (current_user.premium? && (@wiki.user_id == current_user.id)))%><br><br><br><br>
-        <%= link_to 'Manage Collaborators', wiki_collaborators_path(@wiki),class: 'btn btn-success btn-xs' %>
-      <% end %>
-    <% end %>
-</div><br><br>
+<div class="jumbotron">
+  <h1 style="color:blue;float:left;font-family:Copperplate;">Edit Wiki</h1><br><br>
+  <p style="float:right; font-size:12px">Wikis are Markdown Enabled! Below is a preview screen to make sure your MarkDown is on Point.<br>
+  After you've entered your text, click the toggle button.
+  <br> If acceptable, toggle back to black and copy and paste MarkDown text Below!</p>
+  </p><br>
+  <head>
+    <meta charset="utf-8">
+    <script src="js/epiceditor.js"></script>
+  </head>
+  <body>
+    <div id="epiceditor"></div>
+  </body>
+  <script type="text/javascript">
+    var editor = new EpicEditor().load();
+  </script><br><br>
 
   <%= render partial: 'form', locals: {wiki: @wiki} %>
+</div>
