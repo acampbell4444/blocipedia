@@ -9,7 +9,7 @@ require "faker"
     password_confirmation: 'password',
     role: 'standard'
   )
-  user.skip_confirmation!
+  user.skip_reconfirmation!
   user.save!
   end
   users = User.all
